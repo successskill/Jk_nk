@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div id="body" class="d-flex justify-content-center align-items-center"
+  style="min-height: calc(100vh - 60px);">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card shadow-lg rounded-4 text-center p-4">
+          <div class="card-body">
+
+            {% if request.user.status == "Pending" %}
+            <!-- Pending -->
+            <img src="{% static 'img/status/happy.png' %}" class="img-fluid mb-3 mx-auto d-block rounded-circle"
+              style="max-width: 120px;">
+            <h3 class="text-success">Application Submitted!</h3>
+            <p class="text-muted">
+              Your application has been submitted successfully.<br>
+              It will take <strong>24–48 hours</strong> for processing.
+            </p>
+
+            {% elif request.user.status == "Resubmit" %}
+            <!-- Resubmit -->
+            <img src="{% static 'img/status/sad.png' %}" class="img-fluid mb-3 mx-auto d-block rounded-circle"
+              style="max-width: 120px;">
+            <h3 class="text-warning">Resubmission Required</h3>
+            <p class="text-muted">
+              Some details need correction.<br>
+              Please resubmit your application.
+            </p>
+
+            {% else %}
+            <!-- Rejected -->
+            <img src="{% static 'img/status/cry.png' %}" class="img-fluid mb-3 mx-auto d-block rounded-circle"
+              style="max-width: 120px;">
+            <h3 class="text-danger">Application Rejected</h3>
+            <p class="text-muted">
+              Unfortunately, your application has been rejected.<br>
+              You may create a new account or contact support for details.
+            </p>
+            {% endif %}
+
+            <!-- Reference Number -->
+            <div class="alert alert-info mt-3">
+              <strong>Reference Number:</strong> {{request.user.reference_number}}
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-center gap-2 mt-3">
+              {% if request.user.status == "Rejected" %}
+              <button type="button" class="btn btn-outline-primary" onclick="createAccount()">
+                Create Account
+              </button> {% elif request.user.status == "Resubmit" %}
+              <button id="resubmit-btn" class="btn btn-warning" onclick="reSubmit()">Resubmit</button>
+              {% endif %}
+              <a href="/" class="btn btn-primary">Back to Home</a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Resubmit -->
+<div class="container d-none" id="resubmit">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row justify-content-center align-items-center" style="min-height: calc(100vh - 60px);">
+      <div class="col-lg-10 col-md-11 col-sm-12">
+        <div class="p-4 rounded shadow bg-white">
+
+          <h3 class="text-center mb-4 fw-bold text-primary">Re-Upload Form</h3>
+
+          <div class="row g-3">
+
+            <!-- Organization -->
+            {% if "Organization" in allowed_fields %}
+            <div class="col-md-6 col-sm-6 col-12">
+              <label class="form-label">Organization</label>
+              <input name="organization" type="text" class="form-control" placeholder="Organization Name" />
+            </div>
+            {% endif %}
+
+            <!-- Email Id -->
+            {% if "Email Id" in allowed_fields %}
+            <div class="col-md-6 col-sm-6 col-12">
+              <label class="form-label">Email Id</label>
+              <input name="email" type="email" class="form-control" placeholder="Enter your email" />
+            </div>
+            {% endif %}
+
+            <!-- Phone -->
+            {% if "Phone" in allowed_fields %}
+            <div class="col-md-6 col-sm-6 col-12">
+              <label class="form-label">Phone</label>
+              <input name="phone" type="text" class="form-control" placeholder="Enter your phone number" />
+            </div>
+            {% endif %}
+
+            <!-- Outside Image -->
+            {% if "Outside Image" in allowed_fields %}
+            <div class="col-md-6 col-sm-6 col-12">
+              <label class="form-label">Outside Image</label>
+              <input type="file" class="form-control" name="outside_image" accept="image/*" />
+            </div>
+            {% endif %}
+
+            <!-- Inside Image -->
+            {% if "Inside Image" in allowed_fields %}
+            <div class="col-md-6 col-sm-6 col-12">
+              <label class="form-label">Inside Image</label>
+              <input type="file" class="form-control" name="inside_image" accept="image/*" />
+            </div>
+            {% endif %}
+
+            <!-- Last Name -->
+            {% if "Last Name" in allowed_fields %}
+            <div class="col-md-6 col-sm-6 col-12">
+              <label class="form-label">Last Name</label>
+              <input name="last-name" type="text" class="form-control" placeholder="Enter your last name" />
+            </div>
+            {% endif %}
+
+            <!-- Middle Name -->
+            {% if "Middle Name" in allowed_fields %}
+            <div class="col-md-6 col-sm-6 col-12">
+              <label class="form-label">Middle Name</label>
+              <input name="middle-name" type="text" class="form-control" placeholder="Enter your middle name" />
+            </div>
+            {% endif %}
+
+            <!-- First Name -->
+            {% if "First Name" in allowed_fields %}
+            <div class="col-md-6 col-sm-6 col-12">
+              <label class="form-label">First Name</label>
+              <input name="first-name" type="text" class="form-control" placeholder="Enter your first name" />
+            </div>
+            {% endif %}
+
+            <!-- Submit Button -->
+            <div class="col-12 text-center mt-3">
+              <button type="submit" class="btn btn-primary px-4">Submit</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+<script>
+    const csrftoken = "{{ csrf_token }}";
+</script>
+{% endblock %}
