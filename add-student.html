@@ -1,0 +1,161 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Add Student</title>
+
+  <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/teacher-dashboard.css' %}" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold d-flex align-items-center" href="/">
+        <img id="weblogo" src="{% static 'img/icon.png' %}" alt="Logo" height="32" class="me-1"/>
+        <span class="ms-0">GP <span class="text-dark">RESULTS</span></span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          {% for cat in categories %}
+          <li class="nav-item">
+            <a class="nav-link" href="/{{cat.slug}}">{{cat.name}}</a>
+          </li>
+          {% endfor %}
+        </ul>
+        <div class="d-flex align-items-center">
+          <h6 class="mb-0 me-2">{{request.user.username}}</h6>
+          <img src="{% static 'img/avatars/' %}{{ request.user.avatar }}" alt="avatar" class="rounded-circle" height="32">
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main>
+    <div class="container-fluid">
+      <div class="row g-0">
+        <!-- Sidebar -->
+        <aside class="col-md-2 d-none d-lg-block p-3 sidebar">
+          <h5 class="text-white mb-3">Menu</h5>
+          <nav class="nav flex-column">
+            <a class="nav-link" href="#"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+            <div class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle text-white active" href="#" data-bs-toggle="dropdown">
+                <i class="bi bi-people me-2"></i>Students
+              </a>
+              <ul class="dropdown-menu show">
+                <li><a class="dropdown-item" href="#">View Students</a></li>
+                <li><a class="dropdown-item active" href="#">Add Student</a></li>
+                <li><a class="dropdown-item" href="#">Delete Student</a></li>
+              </ul>
+            </div>
+          </nav>
+        </aside>
+
+        <!-- Content -->
+        <section class="col-lg-10 bg-light">
+          <div class="container py-4">
+            <div class="card p-4">
+              <h5 class="fw-bold mb-3">Add Student</h5>
+
+              <!-- Tabs -->
+              <ul class="nav nav-tabs" id="addStudentTab">
+                <li class="nav-item">
+                  <button class="nav-link active" id="create-tab" data-bs-toggle="tab" data-bs-target="#create">Create New Student ID</button>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" id="add-tab" data-bs-toggle="tab" data-bs-target="#addExisting">Add Using Student ID</button>
+                </li>
+              </ul>
+
+              <div class="tab-content mt-3">
+                <!-- Create New Student -->
+                <div class="tab-pane fade show active" id="create">
+                  <form id="createStudentForm">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                      <div class="col-md-4">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username" required>
+                      </div>
+                      <div class="col-md-4">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" required>
+                      </div>
+                      <div class="col-md-4">
+                        <label class="form-label">Phone</label>
+                        <input type="text" class="form-control" name="phone" required>
+                      </div>
+                      <div class="col-md-4">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-control" name="first_name" required>
+                      </div>
+                      <div class="col-md-4">
+                        <label class="form-label">Middle Name</label>
+                        <input type="text" class="form-control" name="middle_name">
+                      </div>
+                      <div class="col-md-4">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" class="form-control" name="last_name" required>
+                      </div>
+                      <div class="col-md-4">
+                        <label class="form-label">Gender</label>
+                        <select class="form-select" name="gender" required>
+                          <option value="">-- Select --</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                        </select>
+                      </div>
+                      <div class="col-md-4">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" required>
+                      </div>
+                      <div class="col-md-4">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" name="confirm_password" required>
+                      </div>
+                    </div>
+<button type="button" id="otpBtn" class="btn btn-purple w-100" onclick="SendOtp()">GET OTP</button>
+<button type="button" id="sotpBtn" class="btn btn-purple w-100 d-none">Sending OTP...</button>
+      <button type="button" id="regBtn" class="btn btn-purple w-100 d-none" onclick="Register()">Register</button>                  </form>
+                </div>
+
+                <!-- Add Using Student ID -->
+                <div class="tab-pane fade" id="addExisting">
+                  <form id="studentIdForm">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                      <label class="form-label">Student ID</label>
+                      <input type="text" class="form-control" name="student_id" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Student</button>
+                  </form>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-top bg-white py-3 mt-auto">
+    <div class="container text-center">
+      <small class="text-muted">© 2025 GOVT Platform Results • All Rights Reserved.</small>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'js/add-student.js' %}"></script>
+</body>
+</html>
