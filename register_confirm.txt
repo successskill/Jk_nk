@@ -1,0 +1,6 @@
+Hi {{ user_name }},
+
+Thanks for creating an account on {{ site_name }}.
+Confirm your email: {{ verify_link }}
+
+This link expires in 24 hours.

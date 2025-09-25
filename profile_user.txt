@@ -1,0 +1,7 @@
+Hello {{ user.username }},
+
+Thank you for submitting your profile ({{ user.organization }}).
+Our team will review your details shortly.
+
+Regards,
+GP Exam Team

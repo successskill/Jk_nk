@@ -1,0 +1,5 @@
+New profile submitted by: {{ user.username }}
+Organization: {{ user.organization }}
+Email: {{ user.email }}
+
+Please check the admin panel.
