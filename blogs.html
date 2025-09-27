@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container py-4 mb-4">
+  <div class="row g-5">
+    {% for item in category_blogs %}
+    <div class="mb-4">
+      <div class="section-header">{{ item.category.name }}</div>
+      <div class="list-links mb-3">
+        <ul class="mb-3">
+          {% for blog in item.blogs %}
+            <li><a href="/{{blog.slug}}/">{{ blog.title }}</a></li>
+          {% empty %}
+            <li>No blogs in this category</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
